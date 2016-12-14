@@ -24,8 +24,8 @@ public class LocationManager implements GoogleApiClient.ConnectionCallbacks, Goo
 
     public static int PERMISSION_ACCESS_COARSE_LOCATION = 1;
 
-    private static final long UPDATE_INTERVAL = TimeUnit.SECONDS.toMillis(10);
-    private static final long FASTEST_INTERVAL = TimeUnit.SECONDS.toMillis(5);
+    private static final long UPDATE_INTERVAL = TimeUnit.HOURS.toMillis(1);
+    private static final long FASTEST_INTERVAL = TimeUnit.MINUTES.toMillis(5);
 
     private Context context;
     private GoogleApiClient googleApiClient;

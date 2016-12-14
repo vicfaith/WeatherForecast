@@ -1,10 +1,9 @@
 package au.com.vicfaith.android.weatherforecast.view.activity;
 
-import android.content.Context;
+import android.databinding.BindingAdapter;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
@@ -14,15 +13,12 @@ import au.com.vicfaith.android.weatherforecast.R;
 import au.com.vicfaith.android.weatherforecast.databinding.ActivityMainBinding;
 import au.com.vicfaith.android.weatherforecast.model.Forecast;
 import au.com.vicfaith.android.weatherforecast.utils.GenericParcelable;
-import au.com.vicfaith.android.weatherforecast.view.ForecastView;
 import au.com.vicfaith.android.weatherforecast.view.adapter.ForecastAdapter;
 import au.com.vicfaith.android.weatherforecast.viewmodel.ForecastViewModel;
 
-public class MainActivity extends BaseActivity<ForecastViewModel> implements ForecastView {
+public class MainActivity extends BaseActivity<ForecastViewModel> {
 
     private ActivityMainBinding binding;
-
-    private ForecastAdapter adapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -32,10 +28,6 @@ public class MainActivity extends BaseActivity<ForecastViewModel> implements For
         binding.setViewModel(viewModel);
 
         setupView();
-
-        if (savedInstanceState != null) {
-            viewModel.showForecast(viewModel.getViewModelState());
-        }
     }
 
     @Nullable
@@ -62,24 +54,16 @@ public class MainActivity extends BaseActivity<ForecastViewModel> implements For
         RecyclerView recyclerView = binding.recyclerView;
         recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new ForecastAdapter();
-        recyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(new ForecastAdapter());
     }
 
-    @Override
-    public Context getContext() {
-        return MainActivity.this;
-    }
-
-    @Override
-    public void showSnackBar(String msg) {
-        Snackbar.make(binding.lyRoot, msg, Snackbar.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void showForecast(List<ForecastAdapter.ItemViewType> forecast) {
-        adapter.clear();
-        adapter.addAll(forecast);
-        adapter.notifyDataSetChanged();
+    @BindingAdapter({"app:items"})
+    public static void setItems(RecyclerView recyclerView, List<ForecastAdapter.ItemViewType> items) {
+        ForecastAdapter adapter = (ForecastAdapter) recyclerView.getAdapter();
+        if (items != null && !items.isEmpty()) {
+            adapter.clear();
+            adapter.addAll(items);
+            adapter.notifyDataSetChanged();
+        }
     }
 }

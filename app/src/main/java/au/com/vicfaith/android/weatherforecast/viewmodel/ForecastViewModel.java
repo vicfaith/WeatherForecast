@@ -17,6 +17,7 @@ import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import au.com.vicfaith.android.weatherforecast.location.LocationManager;
@@ -25,7 +26,7 @@ import au.com.vicfaith.android.weatherforecast.model.Forecast;
 import au.com.vicfaith.android.weatherforecast.network.RestApiClient;
 import au.com.vicfaith.android.weatherforecast.utils.DateFormatter;
 import au.com.vicfaith.android.weatherforecast.utils.TemperatureFormatter;
-import au.com.vicfaith.android.weatherforecast.view.ForecastView;
+import au.com.vicfaith.android.weatherforecast.view.activity.MainActivity;
 import au.com.vicfaith.android.weatherforecast.view.adapter.ForecastAdapter;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -35,16 +36,25 @@ import static au.com.vicfaith.android.weatherforecast.location.LocationManager.P
 
 public class ForecastViewModel extends BaseViewModel<Forecast> implements LocationListener {
     private Context context;
-    private ForecastView forecastView;
     private LocationManager locationManager;
     private RestApiClient restApiClient;
+    private List<ForecastAdapter.ItemViewType> items;
 
-    public ForecastViewModel(ForecastView forecastView) {
-        this.forecastView = forecastView;
+    private boolean showProgressBar;
 
-        context = forecastView.getContext();
+    public ForecastViewModel(Context context) {
+        this.context = context;
         locationManager = new LocationManager(context, this);
         restApiClient = new RestApiClient();
+        items = Collections.emptyList();
+    }
+
+    public List<ForecastAdapter.ItemViewType> getItems() {
+        return items;
+    }
+
+    public boolean getShowProgressBar() {
+        return showProgressBar;
     }
 
     @Override
@@ -69,7 +79,7 @@ public class ForecastViewModel extends BaseViewModel<Forecast> implements Locati
                         break;
                     case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
                         try {
-                            status.startResolutionForResult((au.com.vicfaith.android.weatherforecast.view.activity.MainActivity) context, PERMISSION_ACCESS_COARSE_LOCATION);
+                            status.startResolutionForResult((MainActivity) context, PERMISSION_ACCESS_COARSE_LOCATION);
                         } catch (IntentSender.SendIntentException e) {
                         }
                         break;
@@ -85,7 +95,6 @@ public class ForecastViewModel extends BaseViewModel<Forecast> implements Locati
 
     @Override
     public void onPause() {
-        hideProgressBar();
         locationManager.disconnect();
     }
 
@@ -96,30 +105,30 @@ public class ForecastViewModel extends BaseViewModel<Forecast> implements Locati
             @Override
             public void onResponse(Call<Forecast> call, Response<Forecast> response) {
                 Forecast forecast = response.body();
-                showForecast(forecast);
+                setModelData(forecast);
+                makeAdapterItems(forecast);
                 hideProgressBar();
             }
 
             @Override
             public void onFailure(Call<Forecast> call, Throwable t) {
                 hideProgressBar();
-                forecastView.showSnackBar(t.getMessage());
             }
         });
     }
 
     private void showProgressBar() {
-
+        showProgressBar = true;
+        notifyChange();
     }
 
     private void hideProgressBar() {
-
+        showProgressBar = false;
+        notifyChange();
     }
 
-    public void showForecast(Forecast forecast) {
-        setModelData(forecast);
-
-        List<ForecastAdapter.ItemViewType> items = new ArrayList<>();
+    private void makeAdapterItems(Forecast forecast) {
+        items = new ArrayList<>();
 
         // set current forecast
         CurrentForecast currentForecast = new CurrentForecast();
@@ -138,8 +147,6 @@ public class ForecastViewModel extends BaseViewModel<Forecast> implements Locati
             dailyForecast.setSummary(item.getSummary());
             items.add(dailyForecast);
         }
-
-        forecastView.showForecast(items);
     }
 
     @Override
