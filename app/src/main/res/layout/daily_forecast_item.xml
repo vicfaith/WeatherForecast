@@ -26,6 +26,7 @@
             android:padding="10dp">
 
             <TextView
+                android:id="@+id/icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -34,6 +35,7 @@
                 app:text="@{viewModel.icon}" />
 
             <TextView
+                android:id="@+id/date"
                 android:layout_width="60dp"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
@@ -42,6 +44,7 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/summary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="10dp"

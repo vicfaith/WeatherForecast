@@ -13,14 +13,6 @@ public abstract class BaseViewModel<T> extends BaseObservable {
         this.modelData = modelData;
     }
 
-    public T getViewModelState() {
-        return modelData;
-    }
-
-    public void setViewModelState(T modelData) {
-        this.modelData = modelData;
-    }
-
     public void onDestroy() {
     }
 

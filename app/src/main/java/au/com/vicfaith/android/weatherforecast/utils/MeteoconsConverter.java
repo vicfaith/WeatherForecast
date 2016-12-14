@@ -1,11 +1,17 @@
 package au.com.vicfaith.android.weatherforecast.utils;
 
+import android.text.TextUtils;
+
 /**
  * http://quickwebresources.com/free-download-free-weather-icon-set
  * Created by dkang on 5/12/15.
  */
 public class MeteoconsConverter {
     public static String from(String name) {
+        if (TextUtils.isEmpty(name)) {
+            return "";
+        }
+
         if (name.equals("clear-day")) {
             return "B";
         } else if (name.equals("clear-night")) {

@@ -53,8 +53,38 @@ public class ForecastViewModel extends BaseViewModel<Forecast> implements Locati
         return items;
     }
 
+    public void setAdapterItems(List<ForecastAdapter.ItemViewType> items) {
+        this.items = items;
+    }
+
+    public void setAdapterItems(final Forecast forecast) {
+        items = new ArrayList<>();
+
+        // set current forecast
+        CurrentForecast currentForecast = new CurrentForecast();
+        currentForecast.setIcon(forecast.getCurrently().getIcon());
+        currentForecast.setTemperature(TemperatureFormatter.format(forecast.getCurrently().getTemperature()));
+        currentForecast.setSummary(forecast.getCurrently().getSummary());
+        currentForecast.setNextHourForecast(forecast.getHourly().getSummary());
+        currentForecast.setNext24HoursForecast(forecast.getDaily().getSummary());
+        items.add(currentForecast);
+
+        // set daily forecast
+        for (DataPointModel item : forecast.getDaily().getData()) {
+            DailyForecast dailyForecast = new DailyForecast();
+            dailyForecast.setIcon(item.getIcon());
+            dailyForecast.setDate(DateFormatter.getDate(item.getTime()));
+            dailyForecast.setSummary(item.getSummary());
+            items.add(dailyForecast);
+        }
+    }
+
     public boolean getShowProgressBar() {
         return showProgressBar;
+    }
+
+    public void setShowProgressBar(boolean show) {
+        showProgressBar = show;
     }
 
     @Override
@@ -106,7 +136,7 @@ public class ForecastViewModel extends BaseViewModel<Forecast> implements Locati
             public void onResponse(Call<Forecast> call, Response<Forecast> response) {
                 Forecast forecast = response.body();
                 setModelData(forecast);
-                makeAdapterItems(forecast);
+                setAdapterItems(forecast);
                 hideProgressBar();
             }
 
@@ -125,28 +155,6 @@ public class ForecastViewModel extends BaseViewModel<Forecast> implements Locati
     private void hideProgressBar() {
         showProgressBar = false;
         notifyChange();
-    }
-
-    private void makeAdapterItems(Forecast forecast) {
-        items = new ArrayList<>();
-
-        // set current forecast
-        CurrentForecast currentForecast = new CurrentForecast();
-        currentForecast.setIcon(forecast.getCurrently().getIcon());
-        currentForecast.setTemperature(TemperatureFormatter.format(forecast.getCurrently().getTemperature()));
-        currentForecast.setSummary(forecast.getCurrently().getSummary());
-        currentForecast.setNextHourForecast(forecast.getHourly().getSummary());
-        currentForecast.setNext24HoursForecast(forecast.getDaily().getSummary());
-        items.add(currentForecast);
-
-        // set daily forecast
-        for (DataPointModel item : forecast.getDaily().getData()) {
-            DailyForecast dailyForecast = new DailyForecast();
-            dailyForecast.setIcon(item.getIcon());
-            dailyForecast.setDate(DateFormatter.getDate(item.getTime()));
-            dailyForecast.setSummary(item.getSummary());
-            items.add(dailyForecast);
-        }
     }
 
     @Override

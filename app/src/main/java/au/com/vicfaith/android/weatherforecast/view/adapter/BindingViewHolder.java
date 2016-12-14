@@ -8,7 +8,7 @@ import android.view.View;
 public class BindingViewHolder extends RecyclerView.ViewHolder {
     private ViewDataBinding binding;
 
-    ViewDataBinding getBinding() {
+    public ViewDataBinding getBinding() {
         return binding;
     }
 

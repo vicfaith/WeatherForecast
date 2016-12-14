@@ -34,7 +34,7 @@ public class MainActivity extends BaseActivity<ForecastViewModel> {
     protected ForecastViewModel createViewModel(@Nullable GenericParcelable parcelable) {
         viewModel = new ForecastViewModel(this);
         if (parcelable != null) {
-            viewModel.setViewModelState((Forecast) parcelable.getValue());
+            viewModel.setModelData((Forecast) parcelable.getValue());
         }
         return viewModel;
     }
@@ -43,7 +43,7 @@ public class MainActivity extends BaseActivity<ForecastViewModel> {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         if (viewModel != null) {
-            GenericParcelable viewModelState = new GenericParcelable<>(viewModel.getViewModelState());
+            GenericParcelable viewModelState = new GenericParcelable<>(viewModel.getModelData());
             outState.putParcelable(EXTRA_VIEW_MODEL_STATE, viewModelState);
         }
     }
