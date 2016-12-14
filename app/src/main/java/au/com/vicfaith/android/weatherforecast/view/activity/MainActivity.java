@@ -31,11 +31,16 @@ public class MainActivity extends BaseActivity<ForecastViewModel> {
     }
 
     @Nullable
-    protected ForecastViewModel createViewModel(@Nullable GenericParcelable parcelable) {
+    protected ForecastViewModel createViewModel(@Nullable Bundle savedInstanceState) {
         viewModel = new ForecastViewModel(this);
-        if (parcelable != null) {
-            viewModel.setModelData((Forecast) parcelable.getValue());
+
+        if (savedInstanceState != null) {
+            GenericParcelable parcelable = savedInstanceState.getParcelable(EXTRA_VIEW_MODEL_STATE);
+            if (parcelable != null && parcelable.getValue() != null) {
+                viewModel.setModelData((Forecast) parcelable.getValue());
+            }
         }
+
         return viewModel;
     }
 

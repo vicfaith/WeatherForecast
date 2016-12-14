@@ -41,7 +41,7 @@ public class ForecastAdapterTest {
         RecyclerView recyclerView = mock(RecyclerView.class);
         when(recyclerView.getAdapter()).thenReturn(adapter);
 
-        forecastViewModel.setAdapterItems(forecast);
+        forecastViewModel.setModelData(forecast);
         MainActivity.setItems(recyclerView, forecastViewModel.getItems());
     }
 

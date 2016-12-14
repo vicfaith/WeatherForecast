@@ -49,15 +49,17 @@ public class ForecastViewModel extends BaseViewModel<Forecast> implements Locati
         items = Collections.emptyList();
     }
 
+    @Override
+    public void setModelData(Forecast modelData) {
+        super.setModelData(modelData);
+        setItems(modelData);
+    }
+
     public List<ForecastAdapter.ItemViewType> getItems() {
         return items;
     }
 
-    public void setAdapterItems(List<ForecastAdapter.ItemViewType> items) {
-        this.items = items;
-    }
-
-    public void setAdapterItems(final Forecast forecast) {
+    private void setItems(final Forecast forecast) {
         items = new ArrayList<>();
 
         // set current forecast
@@ -136,7 +138,6 @@ public class ForecastViewModel extends BaseViewModel<Forecast> implements Locati
             public void onResponse(Call<Forecast> call, Response<Forecast> response) {
                 Forecast forecast = response.body();
                 setModelData(forecast);
-                setAdapterItems(forecast);
                 hideProgressBar();
             }
 

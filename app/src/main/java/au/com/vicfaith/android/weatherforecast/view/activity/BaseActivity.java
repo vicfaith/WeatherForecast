@@ -15,7 +15,7 @@ public abstract class BaseActivity<T extends BaseViewModel> extends AppCompatAct
     protected T viewModel;
 
     @Nullable
-    protected abstract T createViewModel(@Nullable GenericParcelable parcelable);
+    protected abstract T createViewModel(@Nullable Bundle savedInstanceState);
 
     public T getViewModel() {
         return viewModel;
@@ -24,12 +24,7 @@ public abstract class BaseActivity<T extends BaseViewModel> extends AppCompatAct
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        GenericParcelable parcelable = null;
-        if (savedInstanceState != null) {
-            parcelable = savedInstanceState.getParcelable(EXTRA_VIEW_MODEL_STATE);
-        }
-        viewModel = createViewModel(parcelable);
+        viewModel = createViewModel(savedInstanceState);
     }
 
     @Override
