@@ -1,5 +1,7 @@
 package au.com.vicfaith.android.weatherforecast.viewmodel;
 
+import android.location.Location;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,6 +33,23 @@ public class ForecastViewModelTest extends ViewModelTest<Forecast, ForecastViewM
         super.setUp();
         Forecast forecast = MockFactory.getMockForecast(RuntimeEnvironment.application);
         viewModel.setModelData(forecast);
+    }
+
+    @Test
+    public void testVerifyModelDataChanged() {
+        assertEquals(9, viewModel.getItems().size());
+
+        Forecast forecast = MockFactory.getMockForecast();
+        viewModel.setModelData(forecast);
+
+        assertEquals(1, viewModel.getItems().size());
+    }
+
+    @Test
+    public void testShowProgressBar() {
+        assertFalse(viewModel.getShowProgressBar());
+        viewModel.onLocationChanged(new Location("dummy"));
+        assertTrue(viewModel.getShowProgressBar());
     }
 
     @Test
