@@ -42,6 +42,12 @@ public class ForecastViewModel extends BaseViewModel<Forecast> implements Locati
 
     private boolean showProgressBar;
 
+    private Location lastLocation;
+
+    public Location getLastLocation() {
+        return lastLocation;
+    }
+
     public ForecastViewModel(Context context) {
         this.context = context;
         locationManager = new LocationManager(context, this);
@@ -130,7 +136,7 @@ public class ForecastViewModel extends BaseViewModel<Forecast> implements Locati
         locationManager.disconnect();
     }
 
-    private void fetchWeatherForecast(Location location) {
+    public void fetchWeatherForecast(Location location) {
         showProgressBar();
 
         restApiClient.fetchWeatherForecast(location.getLongitude(), location.getLatitude(), new Callback<Forecast>() {
@@ -161,6 +167,7 @@ public class ForecastViewModel extends BaseViewModel<Forecast> implements Locati
     @Override
     public void onLocationChanged(Location location) {
         if (location != null) {
+            lastLocation = location;
             fetchWeatherForecast(location);
         }
     }

@@ -68,6 +68,14 @@ public class LocationManager implements GoogleApiClient.ConnectionCallbacks, Goo
                 .setResultCallback(resultResultCallback);
     }
 
+    public boolean isConnected() {
+        if (googleApiClient != null) {
+            return googleApiClient.isConnected();
+        } else {
+            return false;
+        }
+    }
+
     public void connect() {
         if (googleApiClient != null) {
             googleApiClient.connect();

@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import java.util.List;
 
@@ -50,6 +52,23 @@ public class MainActivity extends BaseActivity<ForecastViewModel> {
         if (viewModel != null) {
             GenericParcelable viewModelState = new GenericParcelable<>(viewModel.getModelData());
             outState.putParcelable(EXTRA_VIEW_MODEL_STATE, viewModelState);
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_refresh:
+                viewModel.fetchWeatherForecast(viewModel.getLastLocation());
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 
